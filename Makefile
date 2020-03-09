@@ -1,17 +1,26 @@
-.PHONY: all clean info
+.PHONY: all clean info install
 
-CXXFLAGS = -Wall -std=c++11
+CXXFLAGS = -Wall -O2
+CXXFLAGS+= $(shell root-config --cflags)
+
+LIBS = $(shell root-config --libs)
+
 SRC = $(wildcard *.cc)
 EXE = $(SRC:.cc=.exe)
 
 all: $(EXE)
 
 %.exe: %.cc
-	$(CXX) $(CXXFLAGS) -I /home/liu_lab/shared/include/ -L /home/liu_lab/shared/lib -lCore -lMathCore $< -o $@
+	$(CXX) $(CXXFLAGS) $(LIBS) $< -o $@
 
 info:
 	@echo $(SRC)
 	@echo $(EXE)
+	@echo $(LIBS)
+	@echo $(CXXFLAGS)
 
 clean:
-	rm *.exe
+	$(RM) *.exe
+
+install:
+	mv *.exe ~/bin
